@@ -1,0 +1,459 @@
+class HighArray
+{
+    //fields-------------
+    private long[] a;
+    private int nElem;
+    
+    //(1)creation-------------
+    public HighArray(int max)
+    {
+        a = new long[max];
+        nElem =0;
+    }
+    
+    //(2)insert-----------------------
+    public void insert(long number)
+    {
+        a[nElem] = number;
+        nElem ++;
+    }
+    
+    //(3)display-----------------------
+    public void display()
+    {
+        for(int i =0; i<nElem;i++)
+        {
+            System.out.println("arr[" + i + "]=" + a[i]);
+        }
+        System.out.println("------------------------");
+    }
+    
+    //(4)delete-------------------------
+    public boolean delete(long deleteKey)
+    {
+        int i;
+        for(i =0;i<nElem;i++)
+        {
+            if(a[i]==deleteKey)
+            {
+                break;
+            }
+        }
+        if(i==nElem)
+        {
+            return false;
+        }
+        else
+        {
+            nElem--;
+            for(int j =i; j< nElem;j++ )
+            {
+                a[j] =a[j+1]; //Shift elements , Notice that we ignored the last element (which is equal  to the previous one) as we have reduced nElem 
+            }
+            return true;
+        }
+        
+    }
+    
+   
+    
+    public void deleteAll(long deleteKey)
+    {
+        int N = nElem;
+        for(int i =0;i<N;i++)
+        {
+            delete(deleteKey);
+        }
+    }
+    
+    
+    //(5)find----------------
+    public boolean find(long key)
+    {
+        int i;
+        for(i=0;i<nElem;i++)
+        {
+            if(a[i]==key)
+            {
+                break;
+            }
+        }
+        if(i==nElem)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    //----------------------------------
+    
+    public int binarySearch(long key)
+    {
+        int lowerBound =0;
+        int upperBound =nElem-1;
+        int current;
+        while(true)
+        {
+            current = (lowerBound + upperBound)/2;
+            if(a[current] < key)
+            {
+                lowerBound = current + 1;
+            }
+            else if((a[current] > key))
+            {
+                upperBound = current -1; 
+            }
+            else
+            {
+                return current;
+            }
+            
+            if(lowerBound > upperBound)
+            {
+                return nElem;
+            }
+            
+            
+        }
+    }
+    //----------------------------------------
+    
+    public void binarySearchRecursive(long key)
+    {
+        recursive(0,nElem-1,key);
+    }
+    private void recursive(int lowerBound,int upperBound,long key)
+    {
+        if(lowerBound > upperBound) //the number is out the bounds
+        {
+            System.out.println("Can't find the number "+ key);
+            return;
+        }
+        
+        int current =(lowerBound+upperBound)/2;
+        if(a[current]==key)
+        {
+            System.out.println("The number is at "+current);
+        }
+        
+        else if(a[current] >key)
+                recursive(lowerBound,current -1,key);
+                
+        else
+            recursive(current +1,upperBound,key);
+    }
+    //----------------------------------------
+     public boolean smartDelete(long deleteKey)
+    {
+        int i =binarySearch(deleteKey);
+        if(i==nElem)
+        {
+            return false;
+        }
+        else
+        {
+            nElem--;
+            for(int j =i; j< nElem;j++ )
+            {
+                a[j] =a[j+1]; //Shift elements , Notice that we ignored the last element (which is equal  to the previous one) as we have reduced nElem 
+            }
+            return true;
+        }
+    }
+    //----------------------------
+    public long getMax()
+    {
+        long max =0;
+        for(int i=0;i<nElem;i++)
+        {
+            if(a[i] > max)
+            {
+                max = a[i];
+            }
+        }
+        if(nElem == 0)
+        {
+             max = -1;
+        }
+        return max;
+    }
+    
+    public void removeMax()
+    {
+        long max = getMax();
+        delete(max);
+    }
+    
+    public void removeDuplicates()
+    {
+        for(int i =0; i< nElem; i++)
+        {
+            for(int j =(i+1); j< nElem; j++)
+            {
+                if(a[i] != 0 && a[i] ==a[j])
+                {
+                    a[j] = 0;
+                }
+            }
+        }
+        deleteAll(0);
+    }
+    
+    public long findOneRepeated()
+    {
+        long repeated=0;
+        for(int i =0; i< nElem; i++)
+        {
+            for(int j =(i+1); j< nElem; j++)
+            {
+                if(a[i] ==a[j])
+                {
+                     repeated = a[j];
+                }
+            }
+        }
+      return repeated;
+      
+    }
+    public long[] findFiveRepeated()
+    {
+        int k =0;
+        long[] repeated=new long[5];
+        for(int i =0; i< nElem; i++)
+        {
+            for(int j =(i+1); j< nElem; j++)
+            {
+                if(a[i] ==a[j] && k<5)
+                {
+                     repeated[k] = a[j];
+                     k++;
+                }
+            }
+        }
+      return repeated;
+      
+    }
+    public void sort()
+    {
+        int N = nElem;
+        long max =0;
+        for(int i =0; i<N; i++ )
+        {
+            max = getMax();
+            delete(max);
+            a[nElem]=max;
+        }
+        nElem = N;
+    }
+    public void smartInsert(long value)
+    {
+        int lowerBound =0;
+        int upperBound =nElem-1;
+        int current;
+        while(true)
+        {
+            current = (lowerBound + upperBound)/2;
+            if(a[current] < value)
+            {
+                lowerBound = current + 1;
+            }
+            else if((a[current] > value))
+            {
+                upperBound = current -1; 
+            }
+            else
+            {
+                insertShifting(value , current);
+                break;
+            }
+            
+            if(lowerBound > upperBound)
+            {
+                insertShifting(value , current);
+                break;
+            }
+        }
+        
+    }
+    
+    
+    private void insertShifting(long value , int index)
+        {
+            for(int i = nElem; i>index;i--)
+                a[i]=a[i-1];
+            
+            a[index] = value;
+            nElem++;
+            
+        }
+    
+    private void insertionInsert(long value,int oldIndex)
+    {
+        int lowerBound =0;
+        int upperBound =oldIndex;
+        int current;
+        while(true)
+        {
+            current = (lowerBound + upperBound)/2;
+            if(a[current] < value)
+            {
+                lowerBound = current + 1;
+            }
+            else if((a[current] > value))
+            {
+                upperBound = current -1; 
+            }
+            else
+            {
+                insertShifting2(value , current,oldIndex);
+                break;
+            }
+            
+            if(lowerBound > upperBound)
+            {
+                insertShifting2(value , current,oldIndex);
+                break;
+            }
+        }
+        
+    }
+    
+    //----------------------------------------------------------------
+    private void insertShifting2(long value , int index, int oldIndex)
+        {
+            for(int i = oldIndex; i>index;i--)
+                a[i]=a[i-1];
+            
+            a[index] = value;
+            
+        }
+    //---------------------------------------------------
+    public void bubbleSort()
+    {
+        boolean sorted=true; // if the array is already have been sorted we can reduce the time of the algorithm
+        for(int i=nElem-1; i>1; i--)
+        {
+           for(int j =0; j<i;j++)
+                if(a[j] > a[j+1] )
+                {
+                    swap(j, j+1);
+                    sorted = false;
+                }
+           if(sorted)
+               break;
+        }
+    }
+    private void swap(int one, int two)
+    {
+        long temp = a[one];
+        a[one]=a[two];
+        a[two]=temp;
+    }
+    //---------------------------------------------------
+    
+    public void selectionSort()
+    {
+        int min ;
+        for(int i=0;i<nElem-1;i++)
+        {
+            min = i;
+            for(int j =i+1; j <nElem; j++)
+                if(a[j]<a[min])
+                    min =j;
+            swap(i,min);
+        }
+        
+    }
+    
+    //---------------------------------------------------
+    
+    public void insertionSort()
+    {
+        for(int i=1;i<nElem;i++ )
+        {
+            long temp = a[i];
+            int j;
+            for(j=i;j>0 && a[j-1]>temp;j--)
+            {
+                a[j] = a[j-1];
+            }
+            a[j] = temp;
+        }
+    }
+    //---------------------------------------------------
+    
+    public void binaryInsertionSort()
+    {
+        for(int i=0;i<nElem;i++ )
+        {
+            long temp = a[i];
+            insertionInsert(temp,i);
+            
+        }
+    }
+}
+public class HighArrayApp 
+{
+
+    public static void main(String[] args) 
+    {
+        HighArray arr;
+        int maxSize =100;
+        arr = new HighArray(maxSize);
+        
+        //insert---------------------------
+        arr.insert(10);
+        arr.insert(9);
+        arr.insert(8);
+        arr.insert(7);
+        arr.insert(60);
+        arr.insert(5);
+        arr.insert(4);
+        arr.insert(3);
+        arr.insert(2);
+        arr.insert(1);
+        
+        //display----------------
+        arr.display();
+        
+//        if(arr.find(60))
+//        {
+//            arr.delete(60);
+//        }
+//        if(arr.find(57))
+//        {
+//            arr.delete(57);
+//        }
+        
+       // arr.removeMax();
+        //arr.display();
+        //arr.removeDuplicates();
+        //arr.deleteAll(3);
+        
+        //sort-------------------------------------------
+//        long max;
+//        for(int i =0; i<maxSize; i++ )
+//        {
+//            max = arr.getMax();
+//            arr.delete(max);
+//            arr.insert(max);
+//        }
+     //   arr.sort();
+//        arr.smartDelete(9);
+        //arr.sort();
+      //  arr.smartInsert(14);
+        //arr.display();
+        //arr.sort();
+        //arr.smartInsert(7); 
+        //arr.selectionSort();
+        //arr.bubbleSort();
+        arr.binaryInsertionSort();
+        arr.display();
+        arr.binarySearchRecursive(60);
+        
+        //System.out.print(arr.getMax());
+    }
+    
+}
